@@ -1,0 +1,6 @@
+requests # Updating the website with the generated content.
+tinyhtml # Generating the HTML.
+python-dotenv # Using `.env` for API auth.
+pandas # Reading from the database.
+
+-e .

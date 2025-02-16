@@ -1,0 +1,70 @@
+<!--This document is a showcase of all the data that can be defined in these page defs.
+It guides you through the possible tags and their allowed content.-->
+<!--Important: Linebreaks in the defs will carry over, so be careful when using auto-formatters.
+This is due to how WordPress handles HTML.-->
+<root>
+    <meta>
+        <!--This tag is used to validate that the ID matches the expected page-->
+        <pageTitle>My Page Title</pageTitle>
+        <pageId>1234</pageId>
+        <!--This tag is used to identify the page for meta-content like overview pages.
+        Supported values: "course", "aux", "overview"-->
+        <pageType>course</pageType>
+    </meta>
+    <body>
+        <!--The body can consist of any tags which will all be rendered in order.-->
+        <para>My text in a paragraph.</para>
+        <!--Images can be embedded in either of these two tags, each with their own styling.-->
+        <centerImage>https://example.com/my-image</centerImage>
+        <sideImage>https://example.com/my-image</sideImage>
+        <div>My text in a div.</div>
+    </body>
+    <appendix>
+        <!--The appendix consists of several data tags, all of which are optional.
+        The data blocks always appear in a fixed order, independent of the order in which they are defined here.-->
+        <contactData>
+            <!--The contact data can take any tags but is mostly used to display the database-driven <contact>-tags.-->
+            <header>Nice People</header>
+            <!--A contact must only be the key of the contact as defined in the `./database/contacts.xml`.
+            All other information will then be drawn from the database.-->
+            <contact>mister_foo</contact>
+            <contact>miss_foo</contact>
+            <header>Also Nice People</header>
+            <contact>mister_bar</contact>
+        </contactData>
+        <eventData>
+            <!--The event data consists all information about location and date of the events.
+            The events must be grouped in event groups (see below).
+            Groups can be used to show different locations for different events.-->
+            <eventGroup>
+                <!--Each event group can provide any amount of dates but must provide exactly one location.-->
+                <!--A contact must only be the key of the location as defined in the `./database/locations.xml`.
+                All other information will then be drawn from the database.-->
+                <eventLocation>location_1</eventLocation>
+                <eventDate>Friday, 16:15–17:00</eventDate>
+                <eventDate>Every Second Tuesday, 17:00–17:45</eventDate>
+            </eventGroup>
+            <eventGroup>
+                <eventLocation>location_2</eventLocation>
+                <eventDate>Thursday, 16:15–17:00</eventDate>
+            </eventGroup>
+        </eventData>
+        <registrationData>
+            <!--The registration data has arbitrary content,
+            whichever is required to describe the registration process.-->
+            <!--<groupFull> is a constant tag that shows text to convey that this course is full.-->
+            <groupFull/>
+            <div>Primary Mail:</div>
+            <primaryMail>foo@example.com</primaryMail>
+            <div>Include the following information:</div>
+            <ul>
+                <li>Full Name</li>
+                <li>Phone Number</li>
+            </ul>
+        </registrationData>
+        <ageData>
+            <!--The age data takes a short text to convey the participant's age.-->
+            1–2 Jahre
+        </ageData>
+    </appendix>
+</root>
