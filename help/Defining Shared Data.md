@@ -1,9 +1,11 @@
 # Defining Shared Data
 
-Besides the page defs, there are also some specialized data files that either are more data-heavy than the defs or are shared among different page defs.
+Besides the page defs, there are also some specialized data files that either are more data-heavy than the defs or are
+shared among different page defs.
 
 Here you find a guide on how to define and use the three specialized data files.
 These three are:
+
 - Contacts
 - Locations
 - Event Dates
@@ -12,10 +14,12 @@ These three are:
 
 - File: `./database/contacts.xml`
 - Purpose: Centralized storage of contact info.\
-They are accessed by the `<contact>`-tag.
+  They are accessed by the `<contact>`-tag.
 
 ### Example Content
+
 ```xml
+
 <root>
     <contact>
         <key>mister_foo</key>
@@ -30,10 +34,12 @@ They are accessed by the `<contact>`-tag.
     </contact>
 </root>
 ```
+
 A contact must at least have the `<key>` (For the defs to access it) and `<name>` (To display the name) children.
 The other tags are contact methods and are completely optional.
 
 Available contact methods are:
+
 - "mail": E-Mail
 - "mobile": Mobile Phone
 - "phone": Phone
@@ -42,10 +48,12 @@ Available contact methods are:
 
 - File: `./database/locations.xml`
 - Purpose: Centralized storage of contact info.\
-They are accessed by the `<location>`-tag.
+  They are accessed by the `<location>`-tag.
 
 ### Example content
+
 ```xml
+
 <root>
     <location>
         <key>my_location</key>
@@ -55,17 +63,20 @@ They are accessed by the `<location>`-tag.
     </location>
 </root>
 ```
+
 All children for the `<location>` are required.
 The purpose of each tag is as follows:
+
 - `<key>`: A unique key to identify the location from the page def.
 - `<name>`: The display name.
 - `<address>`: The human-readable address.
 - `<mapLink>`: A google-maps link to the address.
 
 ## Event Dates
+
 - File: `./database/event_dates.csv`
 - Purpose: Listing of all event dates so they can be aggregated on a single page.\
-The content will be rendered by the `<allEventDataes>`-tag.
+  The content will be rendered by the `<allEventDataes>`-tag.
 - Format: Semicolon-separated CSV.
 
 ### Example Content
