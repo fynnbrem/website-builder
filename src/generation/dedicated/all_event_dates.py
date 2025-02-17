@@ -6,10 +6,11 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 import pandas as pd
-from tinyhtml import SupportsRender
+from tinyhtml import SupportsRender, frag
 
 import src.elements.templates as tmpl
 from elements.templates import get_link
+from generation.database_parse import LOCATIONS
 from src.elements.templates import header
 from src.generation.database_parse import ID_TO_TITLE
 from src.upload.upload import get_page_url
@@ -84,21 +85,26 @@ def by_start_time(event_date: EventDate) -> datetime.time:
     return event_date.startTime
 
 
-def get_event_dates(df: pd.DataFrame) -> dict[str, list[EventDate]]:
-    """Reads all event dates from the database and returns them as dict, grouped by day.
-    The dates will be sorted by their start time."""
-    event_dates = defaultdict(list)
+def get_event_dates(df: pd.DataFrame) -> dict[str, dict[str, list[EventDate]]]:
+    """Reads all event dates from the database.
+    The dates will be sorted by their start time.
+
+    :returns:
+        The event days grouped first by location and then by day.
+        `dict[<location>, dict[<day>, list[EventDate]]]`"""
+    event_dates = defaultdict(lambda: defaultdict(list))
     for _, row in df.iterrows():
         data = row.to_dict()
         data["startTime"] = cast_time(data["startTime"])
         data["endTime"] = cast_time(data["endTime"])
 
         ed = EventDate(**data)
-        event_dates[ed.day].append(ed)
-    for eds in event_dates.values():
-        eds.sort(key=by_start_time)
+        event_dates[ed.location][ed.day].append(ed)
+    for day_data in [day_data for location_data in event_dates.values() for day_data in location_data.values()]:
+        day_data.sort(key=by_start_time)
 
-    return event_dates
+    # Cast the `defaultdict` back into a `dict` before returning.
+    return {k: dict(v) for k, v in event_dates.items()}
 
 
 def get_link_from_id(page_id) -> H:
@@ -143,7 +149,7 @@ def generate_table(event_dates: list[EventDate]) -> H:
     return h("table")(h("colgroup")(h("col", style={"width": 100})), rows)
 
 
-def generate_tables(event_dates: dict[str, list[EventDate]]) -> H:
+def generate_tables_for_days(event_dates: dict[str, list[EventDate]]) -> frag:
     """Generates tables for each day defined in the `event_dates` using `generate_table()`.
     Each table gets the day as header."""
     elements: list[SupportsRender] = list()
@@ -152,14 +158,24 @@ def generate_tables(event_dates: dict[str, list[EventDate]]) -> H:
         elements.append(header(DAY_TRANSLATE[day]))
         elements.append(generate_table(events))
 
-    return h("div")(
-        tmpl.large_header("Trainingszeiten Jahnhalle"),
+    return frag(
         elements,
     )
 
+def generate_tables_for_locations(event_dates: dict[str, dict[str, list[EventDate]]]) -> H:
+    """Generates tables for each location defined in the `event_dates` using `generate_tables_for_days()`.
+    Each table group gets the location as header."""
+    html = list()
+    for location, location_data in event_dates.items():
+        day_tables = generate_tables_for_days(location_data)
+        location_name = LOCATIONS[location].name
+        html.append(tmpl.large_header(f"Trainingszeiten {location_name}"))
+        html.append(day_tables)
+
+    return h("div")(*html)
 
 def generate_date_tables_from_database(_: ETree.Element) -> H:
     """Generates the training date tables from the data in `database/event_dates.csv`."""
     data = read_data()
-    dates = get_event_dates(data)
-    return generate_tables(dates)
+    event_data = get_event_dates(data)
+    return generate_tables_for_locations(event_data)
