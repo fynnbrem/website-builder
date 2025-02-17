@@ -28,7 +28,9 @@ This is due to how WordPress handles HTML.-->
             <!--A contact must only be the key of the contact as defined in the `./database/contacts.xml`.
             All other information will then be drawn from the database.-->
             <contact>mister_foo</contact>
-            <contact>miss_foo</contact>
+            <!--A contact can additionally have a `mailOverride`,
+            which changes the mail for only this mention to the override-->
+            <contact mailOverride="special.mail@example.de">miss_foo</contact>
             <header>Also Nice People</header>
             <contact>mister_bar</contact>
         </contactData>

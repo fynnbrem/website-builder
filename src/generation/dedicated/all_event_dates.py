@@ -100,7 +100,11 @@ def get_event_dates(df: pd.DataFrame) -> dict[str, dict[str, list[EventDate]]]:
 
         ed = EventDate(**data)
         event_dates[ed.location][ed.day].append(ed)
-    for day_data in [day_data for location_data in event_dates.values() for day_data in location_data.values()]:
+    for day_data in [
+        day_data
+        for location_data in event_dates.values()
+        for day_data in location_data.values()
+    ]:
         day_data.sort(key=by_start_time)
 
     # Cast the `defaultdict` back into a `dict` before returning.
@@ -162,7 +166,10 @@ def generate_tables_for_days(event_dates: dict[str, list[EventDate]]) -> frag:
         elements,
     )
 
-def generate_tables_for_locations(event_dates: dict[str, dict[str, list[EventDate]]]) -> H:
+
+def generate_tables_for_locations(
+    event_dates: dict[str, dict[str, list[EventDate]]],
+) -> H:
     """Generates tables for each location defined in the `event_dates` using `generate_tables_for_days()`.
     Each table group gets the location as header."""
     html = list()
@@ -173,6 +180,7 @@ def generate_tables_for_locations(event_dates: dict[str, dict[str, list[EventDat
         html.append(day_tables)
 
     return h("div")(*html)
+
 
 def generate_date_tables_from_database(_: ETree.Element) -> H:
     """Generates the training date tables from the data in `database/event_dates.csv`."""

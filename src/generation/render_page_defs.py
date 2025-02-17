@@ -189,13 +189,18 @@ def parse(element: ETree.Element) -> H:
 def parse(element: ETree.Element) -> H:
     """Renders a single <contact> with their name and contact methods."""
     contact = CONTACTS[element.text]
+
+    mail = contact.mail
+    if "mailOverride" in element.attrib:
+        mail = element.attrib["mailOverride"]
+
     return h("div")(
         tmpl.contact_name(contact.name),
         h("div", style={"margin-left": 8})(
             # Arrange the contact methods in a sensible manner (Likeliest method is mobile, then phone, then mail).
             tmpl.contact_mobile(contact.mobile) if contact.mobile is not None else None,
             tmpl.contact_phone(contact.phone) if contact.phone is not None else None,
-            tmpl.contact_mail(contact.mail) if contact.mail is not None else None,
+            tmpl.contact_mail(mail) if mail is not None else None,
         ),
         const.PARA_SPACER,
     )

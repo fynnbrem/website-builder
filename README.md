@@ -33,7 +33,7 @@ To define page defs, follow these steps:
 
 1. The page must be created in WordPress so you can retrieve the ID and title.
 2. Create a definition XML in `./database/pages`. The title may be arbitrary.
-  - Filenames starting with an underscore will be ignored.
+    - Filenames starting with an underscore will be ignored.
 
 For details, refer to the exemplary def in [`./help/Example Page Def.xml`](./help/Example Page Def.xml).
 
